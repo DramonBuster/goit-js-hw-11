@@ -1,6 +1,12 @@
 // ======================= Subtask 1 =======================
 const delay = ms => {
   // Change this function
+  const promise = new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(ms)
+    }, ms);
+  })
+  return promise;
 };
 
 const logger = time => console.log(`Fulfilled after ${time}ms`);
@@ -17,12 +23,13 @@ const users = [
   { name: 'Ajax', active: false },
 ];
 
-const toggleUserState = (allUsers, username, callback) => {
-  const updatedUsers = allUsers.map(user =>
-    user.name === username ? { ...user, active: !user.active } : user
+const toggleUserState = (allUsers, username) => {
+  
+  return new Promise((resolve) => {
+    resolve(allUsers.map(user =>
+    user.name === username ? { ...user, active: !user.active } : user)
   );
-
-  callback(updatedUsers);
+  })
 };
 
 // Currently the function works like this
@@ -30,8 +37,8 @@ const toggleUserState = (allUsers, username, callback) => {
 // toggleUserState(users, 'Ajax', console.table);
 
 // The function should work like this
-// toggleUserState(users, 'Mango').then(console.table);
-// toggleUserState(users, 'Ajax').then(console.table);
+toggleUserState(users, 'Mango').then(console.table);
+toggleUserState(users, 'Ajax').then(console.table);
 
 // ======================= Subtask 3 =======================
 const randomIntegerFromInterval = (min, max) => {
@@ -41,15 +48,19 @@ const randomIntegerFromInterval = (min, max) => {
 const makeTransaction = (transaction, onSuccess, onError) => {
   const delay = randomIntegerFromInterval(200, 500);
 
-  setTimeout(() => {
+  return new Promise((resolve, reject) => {
+
+    setTimeout(() => {
+
     const canProcess = Math.random() > 0.3;
 
     if (canProcess) {
-      onSuccess({ id: transaction.id, time: delay });
+      resolve ({ id: transaction.id, time: delay });
     } else {
-      onError(transaction.id);
+      reject (transaction.id);
     }
   }, delay);
+})
 };
 
 const logSuccess = ({ id, time }) => {
@@ -67,7 +78,7 @@ const logError = id => {
 // makeTransaction({ id: 73, amount: 100 }, logSuccess, logError);
 
 // The function should work like this
-// makeTransaction({ id: 70, amount: 150 }).then(logSuccess).catch(logError);
-// makeTransaction({ id: 71, amount: 230 }).then(logSuccess).catch(logError);
-// makeTransaction({ id: 72, amount: 75 }).then(logSuccess).catch(logError);
-// makeTransaction({ id: 73, amount: 100 }).then(logSuccess).catch(logError);
+makeTransaction({ id: 70, amount: 150 }).then(logSuccess).catch(logError);
+makeTransaction({ id: 71, amount: 230 }).then(logSuccess).catch(logError);
+makeTransaction({ id: 72, amount: 75 }).then(logSuccess).catch(logError);
+makeTransaction({ id: 73, amount: 100 }).then(logSuccess).catch(logError);
