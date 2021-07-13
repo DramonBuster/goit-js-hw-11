@@ -2,17 +2,14 @@
 
 import '../sass/main.scss';
 
-// В HTML есть кнопки Start, Stop, <body>
-const startBtnRef = document.querySelector(".btn-start");
-const stopBtnRef = document.querySelector(".btn-stop");
-const bodyRef = document.querySelector('body');
+const startBtn = document.querySelector(".btn-start");
+const stopBtn = document.querySelector(".btn-stop");
+const body = document.querySelector('body');
 
-// после нажатия кнопки Start раз в секунду меняет цвет фона <body>
-startBtnRef.addEventListener('click', start);
-// При нажатии на кнопку Stop, изменение цвета фона должно останавливаться.
-stopBtnRef.addEventListener('click', stop);
+startBtn.addEventListener('click', start);
+stopBtn.addEventListener('click', stop);
 
-let intervalId = null;
+let timeOfChange = null;
 let isActive = false;
 
 function start(evt) {
@@ -20,28 +17,26 @@ function start(evt) {
     if (isActive) {
         return;
     }
-// Start была не активна.
-    startBtnRef.disabled = true;
+    
+    startBtn.disabled = true;
     isActive = true;
 
-    intervalId = setInterval(() => {
-        // function Change body color
+    timeOfChange = setInterval(() => {
         bodyChangeColor();
     }, 1000);
 }
 
 function stop(evt) {
-    clearInterval(intervalId);
-    intervalId = null;
+    clearInterval(timeOfChange);
+    timeOfChange = null;
     isActive = false;
-    startBtnRef.disabled = false;
+    startBtn.disabled = false;
 }
 
 function bodyChangeColor() {
-    bodyRef.style.backgroundColor = getRandomHexColor();
+    body.style.backgroundColor = getRandomHexColor();
 }
 
-// Для генерации случайного цвета используй функцию getRandomHexColor.
 function getRandomHexColor() {
   return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 }
